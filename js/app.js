@@ -1,11 +1,11 @@
 // Enemies our player must avoid
 class Enemy {
-    constructor(x, y, speed) {
+    constructor(x, y) {
         // Variables applied to each of our instances go here,
         // we've provided one for you to get started
         this.x = x;
         this.y = y;
-        this.speed = speed;
+        this.speed = getRandomInt(150, 400);
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
         this.sprite = 'images/enemy-bug.png';
@@ -16,11 +16,23 @@ class Enemy {
     update(dt) {
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
-        // all computers.
-        this.x += dt * 400;
-        if (this.x > 505) {
+        // all computers.   
+        this.x += dt * this.speed;
+        if (this.x > 550) {
             this.x = -100;
+            this.y = lanes[getRandomInt(0, lanes.length)];
         }
+
+        // Check for player collision
+        let collideFront = (player.x > this.x && player.x < this.x + 51)
+        let collideRear = (player.x < this.x && player.x > this.x - 51)
+        let collideInLane = (this.y == player.y)
+        if ((collideFront || collideRear)  && collideInLane) {
+            // Reset player position upon collision
+            player.x = playerStartX;
+            player.y = playerStartY;
+        }
+
     }
 
     // Draw the enemy on the screen, required method for game
@@ -33,15 +45,19 @@ class Enemy {
 // This class requires an update(), render() and
 // a handleInput() method.
 class Player {
-    constructor(x, y, speed) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.speed = speed;
         this.sprite = 'images/char-boy.png';
+        this.horizontalMove = 100;
+        this.verticalMove = 85;
     }
     
-    update(dt) {
-        return;
+    update() {
+        if (this.y == -25) {
+            this.x = playerStartX;
+            this.y = playerStartY;
+        }
     }
 
     render() {
@@ -79,15 +95,26 @@ class Player {
 }
 
 // Now instantiate your objects.
+let playerStartX = 201;
+let playerStartY = 400;
+let lanes = [60, 145, 230]; // these are the lanes the enemies run on
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-let enemyOne = new Enemy(0, 60, 1);
-let enemyTwo = new Enemy(0, 140, 1);
-let enemyThree = new Enemy(0, 220, 1);
-let player = new Player(200, 400, 1);
-let allEnemies = [enemyOne, enemyTwo, enemyThree];
+let enemyOne = new Enemy(0, lanes[0], 1);
+let enemyTwo = new Enemy(0, lanes[1], 1);
+let enemyThree = new Enemy(0, lanes[2], 1);
+let enemyFour = new Enemy(-1000, lanes[0], 1);
+const player = new Player(playerStartX, playerStartY);
+let allEnemies = [enemyOne, enemyTwo, enemyThree, enemyFour];
 
 // NOTE: Should move about 100 units is about distance for one square on the canvas
+
+// From the MDN docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
