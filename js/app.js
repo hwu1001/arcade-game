@@ -13,24 +13,29 @@ class Enemy {
 
     // Update the enemy's position, required method for game
     // Parameter: dt, a time delta between ticks
+
     update(dt) {
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
         // all computers.   
         this.x += dt * this.speed;
+        // If an enemy moves offscreen reset their location and pick a 
+        // random lane to run down
         if (this.x > 550) {
             this.x = -100;
             this.y = lanes[getRandomInt(0, lanes.length)];
         }
 
         // Check for player collision
+        // Using 51 since png for bugs are 101 pixels in width
         let collideFront = (player.x > this.x && player.x < this.x + 51)
         let collideRear = (player.x < this.x && player.x > this.x - 51)
         let collideInLane = (this.y == player.y)
-        if ((collideFront || collideRear)  && collideInLane) {
+        if ((collideFront || collideRear) && collideInLane) {
             // Reset player position upon collision
             player.x = playerStartX;
             player.y = playerStartY;
+            lives.update();
         }
 
     }
@@ -45,6 +50,7 @@ class Enemy {
 // This class requires an update(), render() and
 // a handleInput() method.
 class Player {
+
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -52,7 +58,7 @@ class Player {
         this.horizontalMove = 100;
         this.verticalMove = 85;
     }
-    
+
     update() {
         if (this.y == -25) {
             this.x = playerStartX;
@@ -66,25 +72,24 @@ class Player {
 
     handleInput(direction) {
         switch (direction) {
-            // TODO: Define game constants for player movement limits
             case 'left':
                 if (this.x > 0) {
-                    this.x -= 100;
+                    this.x -= this.horizontalMove;
                 }
                 break;
             case 'up':
                 if (this.y > -25) {
-                    this.y -= 85;
+                    this.y -= this.verticalMove;
                 }
                 break;
             case 'right':
                 if (this.x < 400) {
-                    this.x += 100;
+                    this.x += this.horizontalMove;
                 }
                 break;
             case 'down':
-                if (this. y < 400) {
-                    this.y += 85;
+                if (this.y < 400) {
+                    this.y += this.verticalMove;
                 }
                 break;
             default:
@@ -94,6 +99,68 @@ class Player {
 
 }
 
+class GameLives {
+    constructor() {
+        this.lives = 3;
+        this.maxLives = 5;
+        this.sprite = 'images/Heart.png';
+        this.spriteHeight = 40;
+        this.spriteWidth = 60;
+        this.spriteCoords = [
+            { x: 460, y: -5 },
+            { x: 420, y: -5 },
+            { x: 380, y: -5 },
+            { x: 340, y: -5 },
+            { x: 300, y: -5 }
+        ];
+    }
+
+    render() {
+        for (let i = 0; i < this.lives; i++) {
+            ctx.drawImage(Resources.get(this.sprite), this.spriteCoords[i].x, this.spriteCoords[i].y, this.spriteHeight, this.spriteWidth);
+        }
+    }
+
+    update() {
+        if (this.lives > 0) {
+            this.lives -= 1;
+        }
+        if (this.lives === 0) {
+            document.body.removeChild(document.getElementsByTagName('canvas')[0]);
+            let modal = document.getElementById('game-over');
+            modal.classList.remove('modal-hide');
+            modal.classList.add('modal-show');
+        }
+    }
+}
+
+// From the MDN docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
+// This listens for key presses and sends the keys to your
+// Player.handleInput() method. You don't need to modify this.
+document.addEventListener('keyup', function (e) {
+    let allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+    };
+    if (e.keyCode in allowedKeys) {
+        player.handleInput(allowedKeys[e.keyCode]);
+    }
+});
+
+document.getElementById('modal-button').addEventListener('click', function() {
+    // Since the game is simple, restarting will simply be loading the document again
+    document.location.reload();
+});
+
+// Global Variables
 // Now instantiate your objects.
 let playerStartX = 201;
 let playerStartY = 400;
@@ -105,27 +172,13 @@ let enemyTwo = new Enemy(0, lanes[1], 1);
 let enemyThree = new Enemy(0, lanes[2], 1);
 let enemyFour = new Enemy(-1000, lanes[0], 1);
 const player = new Player(playerStartX, playerStartY);
+let lives = new GameLives();
 let allEnemies = [enemyOne, enemyTwo, enemyThree, enemyFour];
 
-// NOTE: Should move about 100 units is about distance for one square on the canvas
+// TODO: Add Lives
+// TODO: Add Game Over - Reset
+// TODO: Add Score
+// TODO: Add Character Selection
+// TODO: Add comments
+// TODO: Update README.md file - Need to know how to run and play the game
 
-// From the MDN docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-}
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
-    if (e.keyCode in allowedKeys) {
-        player.handleInput(allowedKeys[e.keyCode]);
-    }
-});

@@ -1,3 +1,51 @@
 body {
     text-align: center;
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* 
+ * Styles for Modal Pop-up
+ * Most of the modal styles taken from this guide: https://www.w3schools.com/howto/howto_css_modals.asp
+ */
+.modal {
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: #000000; /* Fallback color */
+    background-color: #00000066; /* Black w/ opacity */
+    align-content: center;
+}
+
+.modal.modal-hide {
+    display: none; /* Hidden by default */
+}
+
+.modal.modal-show {
+    display: block;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    text-align: center;
+}
+
+#modal-button {
+    font-family : inherit;
+    font-size: 1em;
+    background: black;
+    color: #fff;
+    border-radius: 5px 5px 5px 5px;
+    cursor: pointer;
+    padding: 16px 32px;
+    font-size: 16px;
 }
