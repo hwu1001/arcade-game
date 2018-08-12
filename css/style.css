@@ -18,7 +18,6 @@ body {
     overflow: auto; /* Enable scroll if needed */
     background-color: #000000; /* Fallback color */
     background-color: #00000066; /* Black w/ opacity */
-    align-content: center;
 }
 
 .modal.modal-hide {
@@ -29,13 +28,12 @@ body {
     display: block;
 }
 
-/* Modal Content */
 .modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 60%;
+    width: 50%;
     text-align: center;
 }
 

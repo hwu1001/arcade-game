@@ -1,5 +1,11 @@
 // Enemies our player must avoid
 class Enemy {
+
+    /**
+    * @description Represents an enemy in the game
+    * @param {number} x - X coordinate where enemy starts
+    * @param {number} y - Y coordinate where enemy starts
+    */
     constructor(x, y) {
         // Variables applied to each of our instances go here,
         // we've provided one for you to get started
@@ -11,9 +17,10 @@ class Enemy {
         this.sprite = 'images/enemy-bug.png';
     }
 
-    // Update the enemy's position, required method for game
-    // Parameter: dt, a time delta between ticks
-
+    /**
+    * @description Update the enemy's position and reset their position once off screen
+    * @param {DateConstructor} dt - DateTime object from engine.js, a time delta between ticks
+    */
     update(dt) {
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
@@ -40,7 +47,9 @@ class Enemy {
 
     }
 
-    // Draw the enemy on the screen, required method for game
+    /**
+    * @description Draw the enemy on the canvas
+    */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
@@ -51,6 +60,11 @@ class Enemy {
 // a handleInput() method.
 class Player {
 
+    /**
+    * @description Represents a player in the game
+    * @param {number} x - X coordinate where player starts
+    * @param {number} y - Y coordinate where player starts
+    */
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -59,6 +73,9 @@ class Player {
         this.verticalMove = 85;
     }
 
+    /**
+    * @description Update a player's position when they reach the water
+    */
     update() {
         if (this.y == -25) {
             this.x = playerStartX;
@@ -66,12 +83,20 @@ class Player {
         }
     }
 
+    /**
+    * @description Draw a player on the canvas
+    */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
+    /**
+    * @description Handles player movement.
+    * @param {string} direction - Direction player is moving: 'up', 'left', 'right', or 'down'
+    */
     handleInput(direction) {
         switch (direction) {
+            // Prevent the player from leaving the canvas
             case 'left':
                 if (this.x > 0) {
                     this.x -= this.horizontalMove;
@@ -100,6 +125,10 @@ class Player {
 }
 
 class GameLives {
+
+    /**
+    * @description Represents the lives the player has in the game
+    */
     constructor() {
         this.lives = 3;
         this.maxLives = 5;
@@ -115,18 +144,24 @@ class GameLives {
         ];
     }
 
+    /**
+    * @description Render the player's lives on the canvas
+    */
     render() {
         for (let i = 0; i < this.lives; i++) {
             ctx.drawImage(Resources.get(this.sprite), this.spriteCoords[i].x, this.spriteCoords[i].y, this.spriteHeight, this.spriteWidth);
         }
     }
 
+    /**
+    * @description Update the player's lives and handle when game ends
+    */
     update() {
         if (this.lives > 0) {
             this.lives -= 1;
         }
         if (this.lives === 0) {
-            document.body.removeChild(document.getElementsByTagName('canvas')[0]);
+            document.removeEventListener('keyup', keyUpInput);
             let modal = document.getElementById('game-over');
             modal.classList.remove('modal-hide');
             modal.classList.add('modal-show');
@@ -134,16 +169,24 @@ class GameLives {
     }
 }
 
-// From the MDN docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
+/**
+* @description Generate a random integer
+* From the MDN docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
+* @param {number} min - Minimum number (inclusive)
+* @param {number} max - Maximum number (exclusive)
+*/
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function (e) {
+/**
+* @description This listens for key presses and sends the keys to your
+* Player.handleInput() method. You don't need to modify this.
+* @param {EventTarget} e - Event object from the browser
+*/
+keyUpInput = function(e) {
     let allowedKeys = {
         37: 'left',
         38: 'up',
@@ -153,8 +196,11 @@ document.addEventListener('keyup', function (e) {
     if (e.keyCode in allowedKeys) {
         player.handleInput(allowedKeys[e.keyCode]);
     }
-});
+};
 
+// Move player event
+document.addEventListener('keyup', keyUpInput);
+// Add event to restart the game
 document.getElementById('modal-button').addEventListener('click', function() {
     // Since the game is simple, restarting will simply be loading the document again
     document.location.reload();
@@ -171,14 +217,11 @@ let enemyOne = new Enemy(0, lanes[0], 1);
 let enemyTwo = new Enemy(0, lanes[1], 1);
 let enemyThree = new Enemy(0, lanes[2], 1);
 let enemyFour = new Enemy(-1000, lanes[0], 1);
-const player = new Player(playerStartX, playerStartY);
+const player = new Player(playerStartX, playerStartY); // used by engine.js to render the player
 let lives = new GameLives();
-let allEnemies = [enemyOne, enemyTwo, enemyThree, enemyFour];
+let allEnemies = [enemyOne, enemyTwo, enemyThree, enemyFour]; // used by engine.js to render the enemies
 
-// TODO: Add Lives
-// TODO: Add Game Over - Reset
 // TODO: Add Score
 // TODO: Add Character Selection
-// TODO: Add comments
 // TODO: Update README.md file - Need to know how to run and play the game
 
