@@ -221,7 +221,3 @@ const player = new Player(playerStartX, playerStartY); // used by engine.js to r
 let lives = new GameLives();
 let allEnemies = [enemyOne, enemyTwo, enemyThree, enemyFour]; // used by engine.js to render the enemies
 
-// TODO: Add Score
-// TODO: Add Character Selection
-// TODO: Update README.md file - Need to know how to run and play the game
-
