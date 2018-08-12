@@ -35,9 +35,9 @@ class Enemy {
 
         // Check for player collision
         // Using 51 since png for bugs are 101 pixels in width
-        let collideFront = (player.x > this.x && player.x < this.x + 51)
-        let collideRear = (player.x < this.x && player.x > this.x - 51)
-        let collideInLane = (this.y == player.y)
+        const collideFront = (player.x > this.x && player.x < this.x + 51)
+        const collideRear = (player.x < this.x && player.x > this.x - 51)
+        const collideInLane = (this.y == player.y)
         if ((collideFront || collideRear) && collideInLane) {
             // Reset player position upon collision
             player.x = playerStartX;
@@ -77,7 +77,7 @@ class Player {
     * @description Update a player's position when they reach the water
     */
     update() {
-        if (this.y == -25) {
+        if (this.y === -25) {
             this.x = playerStartX;
             this.y = playerStartY;
         }
@@ -187,7 +187,7 @@ function getRandomInt(min, max) {
 * @param {EventTarget} e - Event object from the browser
 */
 keyUpInput = function(e) {
-    let allowedKeys = {
+    const allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
@@ -208,16 +208,16 @@ document.getElementById('modal-button').addEventListener('click', function() {
 
 // Global Variables
 // Now instantiate your objects.
-let playerStartX = 201;
-let playerStartY = 400;
-let lanes = [60, 145, 230]; // these are the lanes the enemies run on
+const playerStartX = 201;
+const playerStartY = 400;
+const lanes = [60, 145, 230]; // these are the lanes the enemies run on
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-let enemyOne = new Enemy(0, lanes[0], 1);
-let enemyTwo = new Enemy(0, lanes[1], 1);
-let enemyThree = new Enemy(0, lanes[2], 1);
-let enemyFour = new Enemy(-1000, lanes[0], 1);
+const enemyOne = new Enemy(0, lanes[0], 1);
+const enemyTwo = new Enemy(0, lanes[1], 1);
+const enemyThree = new Enemy(0, lanes[2], 1);
+const enemyFour = new Enemy(-1000, lanes[0], 1);
 const player = new Player(playerStartX, playerStartY); // used by engine.js to render the player
-let lives = new GameLives();
-let allEnemies = [enemyOne, enemyTwo, enemyThree, enemyFour]; // used by engine.js to render the enemies
+const lives = new GameLives();
+const allEnemies = [enemyOne, enemyTwo, enemyThree, enemyFour]; // used by engine.js to render the enemies
 
